@@ -217,8 +217,8 @@ void SaveSolutionForPlotting(DataModel& data,
 void SolveVRP() {
     DataModel data;
     std::cout << "Iniciando VRP...\n";
-    if (!ReadDistanceMatrix("Dist.txt", data.distance_matrix) ||
-        !ReadCoordinates("Coord.txt", data.coordinates)) {
+    if (!ReadDistanceMatrix("./txt/Dist.txt", data.distance_matrix) ||
+        !ReadCoordinates("./txt/Coord.txt", data.coordinates)) {
         std::cerr << "Fallo al leer los archivos de datos. Abortando.\n";
         return;
     }

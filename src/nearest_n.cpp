@@ -121,12 +121,12 @@ int main() {
     DataModel data;
 
     std::cout << "== VRP Vecino Más Próximo ==\n";
-    if (!ReadDistanceMatrix("Dist.txt", data.distance_matrix)) {
+    if (!ReadDistanceMatrix("./txt/Dist.txt", data.distance_matrix)) {
         std::cerr << "Error al leer Dist.txt\n";
         return 1;
     }
 
-    if (!ReadCoordinates("Coord.txt", data.coordinates)) {
+    if (!ReadCoordinates("./txt/Coord.txt", data.coordinates)) {
         std::cerr << "Error al leer Coord.txt\n";
         return 1;
     }

@@ -1,86 +1,174 @@
+
 # Vehicle Routing Problem Solver
 
 ## Overview
-The **Vehicle Routing Problem Solver** is a C++-based project designed to solve the Vehicle Routing Problem (VRP) for a set of customers with a fixed vehicle capacity. The project implements two algorithms: a metaheuristic approach using Google's OR-Tools with Guided Local Search (GLS) and a greedy Nearest Neighbor (NN) heuristic. The solver processes input data from distance matrices (`Dist.txt`) and coordinate files (`Coord.txt`) to compute optimal or near-optimal routes for a fleet of vehicles.
 
-This project was developed as part of an academic or research effort to compare the performance of advanced optimization tools against simple heuristics in solving VRP instances.
+The **Vehicle Routing Problem Solver** is a C++-based system designed to tackle the Capacitated Vehicle Routing Problem (CVRP) involving a depot and up to 200 customer nodes using fixed-capacity vehicles. It implements:
+
+- **Hybrid Genetic Search (HGS)** with preprocessing and postprocessing
+- **Nearest Neighbor + Clarke and Wright Savings + 2-OPT**
+- **Google OR-Tools with Guided Local Search (GLS)**
+
+This solver was built as part of an academic research project comparing different CVRP strategies for speed and solution quality.
+
+---
 
 ## Features
-- **OR-Tools Implementation**: Utilizes OR-Tools with Guided Local Search to find high-quality solutions for VRP instances with up to 200 nodes.
-- **Nearest Neighbor Heuristic**: Implements a fast, greedy algorithm that constructs routes by selecting the closest unvisited customer, respecting vehicle capacity constraints (12 customers per vehicle).
-- **Flexible Input Handling**: Reads distance matrices (`Dist.txt`) and coordinate files (`Coord.txt`) to support various problem instances.
-- **Scalable Design**: Handles large datasets efficiently with configurable parameters for solution quality and runtime.
 
-## Repository Structure
+- ✅**Hybrid Genetic Search (HGS)**
+  - Metaheuristic-based solver
+  - Preprocessing: *Nearest Neighbor* and *Clarke & Wright Savings*
+  - Postprocessing: *2-OPT* local search
+  - Scales up to 200 customers and supports flexible fleet sizes
+
+- ⚡ **Greedy Heuristics**
+  - *Nearest Neighbor* algorithm
+  - Enhanced with *2-OPT* to improve route efficiency
+
+- 🤖 **OR-Tools GLS**
+  - Uses Google's optimization suite for robust and competitive solutions
+
+- 🧩 **Flexible Input**
+  - Supports `.vrp` (VRPLIB format) and `Coord.txt` (raw coordinate list)
+
+---
+
+## Project Structure
+
 ```
-vrp-solver/
+
+research\_project/
 ├── src/
-│   ├── vrp_solution.cpp    # OR-Tools implementation with GLS
-│   ├── nearest_n.cpp       # Nearest Neighbor heuristic implementation
-├── data/
-│   ├── Dist.txt           # Distance matrix input file
-│   ├── Coord.txt          # Coordinates input file
-├── README.md              # Project documentation (this file)
-└── LICENSE                # License file (MIT License)
-```
+│   ├── hgs/
+│   │   ├── HGS-CVRP/              # HGS-based CVRP solver
+│   │   │   ├── Program/           # Source code: Params.cpp, Genetic.cpp, etc.
+│   │   │   ├── Coord.txt          # Input file (coordinates)
+│   │   │   ├── CMakeLists.txt     # Build file
+│   │   ├── HGS-CW-NN-2OPT/        # NN + CW + 2-OPT implementation
+│   ├── or-tools-gls/
+│   │   ├── vrp\_solution.cpp       # OR-Tools solver
+│   │   ├── nearest\_n.cpp          # Nearest Neighbor algorithm
+│   │   ├── ver\_second\_solution.cpp # Optional verification code
+│   │   ├── txt/                   # Input/output directory
+│   │   ├── CMakeLists.txt         # Build file
+├── README.md                      # Documentation
+└── LICENSE                        # MIT License
+
+````
+
+---
 
 ## Installation
+
 ### Prerequisites
-- **C++ Compiler**: GCC, Clang, or MSVC (C++17 or later).
-- **OR-Tools**: Google's OR-Tools library (version 9.8 or later).
-- **CMake**: For building the project (version 3.10 or later).
 
-### Setup
-1. **Clone the Repository**:
-   ```bash
-   git clone https://github.com/your-username/vrp-solver.git
-   cd vrp-solver
-   ```
+- **C++17 Compiler** (GCC, Clang, MSVC)
+- **CMake >= 3.15**
+- **Google OR-Tools** (for `or-tools-gls` only)
 
-2. **Install OR-Tools**:
-   Follow the [OR-Tools installation guide](https://developers.google.com/optimization/install) for C++. Ensure the library is linked correctly in your build system.
+---
 
-3. **Build the Project**:
-   ```bash
-   mkdir build
-   cd build
-   cmake ..
-   make
-   ```
+### Build Instructions
 
-4. **Prepare Input Files**:
-   - Place `Dist.txt` and `Coord.txt` in the `data/` directory.
-   - Ensure `Dist.txt` contains a valid distance matrix (in meters) and `Coord.txt` contains node coordinates.
+#### Clone the Repository
 
-5. **Run the Solver**:
-   ```bash
-   ./vrp_solution  # Run OR-Tools solver
-   ./nearest_n     # Run Nearest Neighbor heuristic
-   ```
+```bash
+git clone https://github.com/your-username/research_project.git
+cd research_project
+````
+
+#### Build the HGS CVRP Solver
+
+```bash
+cd src/hgs/HGS-CVRP
+mkdir build
+cd build
+cmake ..
+make
+```
+
+#### Build the OR-Tools + NN Implementations
+
+```bash
+cd ../../../or-tools-gls
+mkdir build
+cd build
+cmake ..
+make
+```
+
+---
+
+## Input Files
+
+### Formats
+
+* `Coord.txt`: One line per node (depot first), with `x y` coordinates
+* `.vrp`: Standard VRPLIB files with node coords, demands, and capacity
+
+### Where to Place Inputs
+
+| Solver        | Input Location          |
+| ------------- | ----------------------- |
+| HGS           | `src/hgs/HGS-CVRP/`     |
+| NN / OR-Tools | `src/or-tools-gls/txt/` |
+
+---
 
 ## Usage
-- **Input Files**:
-  - `Dist.txt`: A square matrix of floating-point distances (in meters) between nodes. The matrix must be symmetric with zero diagonal entries.
-  - `Coord.txt`: A list of (x, y) coordinates for each node (optional, used for visualization or distance computation if needed).
-- **Output**: The solver outputs the total distance (in meters) and the routes for each vehicle, respecting the capacity constraint of 12 customers per vehicle.
-- **Configuration**:
-  - Modify `vrp_solution.cpp` to adjust OR-Tools parameters (e.g., time limit, first solution strategy).
-  - Adjust `nearest_n.cpp` for custom heuristic behavior.
 
-Example:
+### HGS Solver
+
 ```bash
+cd src/hgs/HGS-CVRP/build
+./hgs_cvrp -i ../Coord.txt -o solution.txt -v
+```
+
+### OR-Tools GLS
+
+```bash
+cd src/or-tools-gls/build
+./vrp_solution
+```
+
+### Nearest Neighbor + 2-OPT
+
+```bash
+cd src/or-tools-gls/build
+./nearest_n
+```
+
+---
+
+## Example Output
+
+```bash
+$ ./hgs_cvrp -i test_instance.vrp -o solution.txt -v
+----- INSTANCE SUCCESSFULLY LOADED WITH 199 CLIENTS AND 20 VEHICLES
+Total Distance: 11872.0 meters
+Route for vehicle 0: 0 -> 12 -> 31 -> 45 -> 0
+...
+
 $ ./vrp_solution
-Total Distance: 15000.0 meters
-Route for vehicle 0: 0 -> 1 -> 3 -> 5 -> 0
+Total Distance: 12345.0 meters
+Route for vehicle 1: 0 -> 8 -> 24 -> 50 -> 0
 ...
 
 $ ./nearest_n
-Total Distance: 16500.0 meters
-Route for vehicle 0: 0 -> 2 -> 4 -> 6 -> 0
+Total Distance: 13478.0 meters
+Route for vehicle 2: 0 -> 1 -> 2 -> 3 -> 0
 ...
 ```
 
+---
+
 ## Contributors
-- Andrés Vélez Rendón
-- Samuel Andrés Ariza Gomez
+
+* **Andrés Vélez Rendón**
+* **Samuel Andrés Ariza Gómez**
+
+
+```
+```
+
 

@@ -1,0 +1,5 @@
+/home/andres/Documents/Universidad/analisis_numerico/research_project_and_algorithms/research_project/src/build/CMakeFiles/nearest_n.dir
+/home/andres/Documents/Universidad/analisis_numerico/research_project_and_algorithms/research_project/src/build/CMakeFiles/vrp_solution.dir
+/home/andres/Documents/Universidad/analisis_numerico/research_project_and_algorithms/research_project/src/build/CMakeFiles/ver_second_solution.dir
+/home/andres/Documents/Universidad/analisis_numerico/research_project_and_algorithms/research_project/src/build/CMakeFiles/edit_cache.dir
+/home/andres/Documents/Universidad/analisis_numerico/research_project_and_algorithms/research_project/src/build/CMakeFiles/rebuild_cache.dir

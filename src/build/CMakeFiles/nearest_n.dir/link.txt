@@ -1,1 +1,0 @@
-/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/nearest_n.dir/link.d CMakeFiles/nearest_n.dir/nearest_n.cpp.o -o nearest_n
